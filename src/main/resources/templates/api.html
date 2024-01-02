@@ -27,6 +27,9 @@
             display: flex;
             justify-content: center;
             margin-top: 20px;
+            border: 2px solid #1A273E; /* Border color */
+            padding: 10px;
+            border-radius: 5px;
         }
 
         .darkblue-btn {
@@ -71,7 +74,7 @@
             </div>
         </div>
     </nav>
-    <br /><br /><br /><br><br><br><br><br><br><br><br>
+    <br /><br />
     <div class="container">
         <div class="row col-md-8 offset-md-2">
             <div class="card translucent-card">
@@ -82,15 +85,22 @@
                 <div class="card mt-3">
                     <div class="card-body">
                         <h5 class="text-center">How to use REST API</h5>
-                        <p class="text-center">To extract an individual user's IPPT data, replace {username} with the username of the user you want to access.
+                        <p class="text-center">To extract an individual user's IPPT data, replace {username} with the
+                            username of the user you want to access.
                         </p>
                         <div class="link-container">
-                            <a>https://trainify.up.railway.app/api/Trainify/{username}</a>
+                            https://trainify.up.railway.app/api/user/{username}
+                        </div>
+                        <br>
+                        <p class="text-center">To access sample user's IPPT data, click the link shown below.</p>
+                        <div class="link-container">
+                            <a href="https://trainify.up.railway.app/api/user/test" class="darkblue-btn"
+                                target="_blank">https://trainify.up.railway.app/api/user/test</a>
                         </div>
                         <br>
                         <p class="text-center">To access all user's IPPT data, click the link shown below.</p>
                         <div class="link-container">
-                            <a href="https://trainify.up.railway.app/api/Trainify/" class="darkblue-btn"
+                            <a href="https://trainify.up.railway.app/api/alluser/" class="darkblue-btn"
                                 target="_blank">https://trainify.up.railway.app/api/Trainify/</a>
                         </div>
                         <br>
@@ -103,6 +113,11 @@
             <a class="btn btn-success" href="/">Back to home</a>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI/tf1ltWG8zO0rma3uXzj0lssLYToflQ8/RSRNR5Mx+k2ZlU5O8pFdiQsI2b" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pzjw8C+ua/C4jhKEgWp8LO5mR2b6H1bZHp4ApVPRXa4PPtqFAq5EG97L6EK2FkF2" crossorigin="anonymous"></script>
 </body>
 
 </html>

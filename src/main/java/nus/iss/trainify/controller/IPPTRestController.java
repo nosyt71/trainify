@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @RestController
-@RequestMapping
+@RequestMapping(path="/api")
 public class IPPTRestController {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -33,7 +33,7 @@ public class IPPTRestController {
 
     private static final String REDIS_KEY_PREFIX = "workout:";
     
-    @GetMapping(path = "/api/Trainify/{username}", produces = "application/json")
+    @GetMapping(path = "/user/{username}", produces = "application/json")
     public ResponseEntity<String> getWorkoutList(@PathVariable("username") String username) {
         String key = REDIS_KEY_PREFIX + username;
 
@@ -64,7 +64,7 @@ public class IPPTRestController {
         }
     }
 
-    @GetMapping(path = "/api/Trainify", produces = "application/json")
+    @GetMapping(path="/alluser", produces = "application/json")
     public ResponseEntity<String> getAllWorkoutList() {
         Set<String> keys = redisTemplate.keys(REDIS_KEY_PREFIX + "*");
 
@@ -74,10 +74,8 @@ public class IPPTRestController {
             ListOperations<String, String> listOperations = redisTemplate.opsForList();
 
             if (listOperations != null) {
-                // Retrieve the list of workout maps from Redis
                 List<String> workoutStrings = listOperations.range(key, 0, -1);
 
-                // Convert the list of strings to a list of Workout objects
                 List<Workout> userWorkouts = workoutStrings.stream()
                         .map(this::deserializeWorkoutString)
                         .collect(Collectors.toList());
@@ -86,19 +84,21 @@ public class IPPTRestController {
             }
         }
 
-        // Print all userWorkouts
-        for (Workout workout : allWorkouts) {
-            System.out.println(workout);
-        }
-
         int streak = calculateStreak(allWorkouts);
 
-        // Create a JSON response
-        String response = "{\"workouts\":" + allWorkouts.toString() + ", \"streak\":" + streak + "}";
+        // Create a JSON response directly
+        String response = "{\"workouts\":" + serializeWorkoutsToJson(allWorkouts) + ", \"streak\":" + streak + "}";
 
         return ResponseEntity.ok(response);
     }
 
+    private String serializeWorkoutsToJson(List<Workout> workouts) {
+        try {
+            return objectMapper.writeValueAsString(workouts);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to serialize workouts to JSON", e);
+        }
+    }
     // Deserialize Workout string to Workout object
     private Workout deserializeWorkoutString(String workoutString) {
         try {

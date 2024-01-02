@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -342,38 +343,4 @@ public class WorkoutController {
         // Redirect to workout.html
         return "redirect:/workout";
     }
-
-
-    // public List<String> generateWorkoutVideos(
-    //          String location,
-    //          String duration,
-    //          String focus
-    // ) {
-    //     List<Video> allVideos = getVideos();
-
-    //     System.out.println(location);
-    //     System.out.println(duration);
-    //     System.out.println(focus);
-    //     // Filter videos based on the specified criteria
-    //     List<String> filteredVideosIds = allVideos.stream()
-    //             .filter(video -> video.getLocation().equalsIgnoreCase(location))
-    //             .filter(video -> video.getDuration().equalsIgnoreCase(duration))
-    //             .filter(video -> video.getFocus().equalsIgnoreCase(focus))
-    //             .map(Video::getVideoId)
-    //             .collect(Collectors.toList());
-
-    //     List<String> filteredVideosUrls = filteredVideosIds.stream()
-    //             .map(videoId -> "https://www.youtube.com/embed/" + videoId)
-    //             .collect(Collectors.toList());
-        
-    //     return filteredVideosUrls;
-    // }
-
-
-
-    // private List<Video> getVideos() {
-
-    //     List<Video> videos = new ArrayList<>();
-    //     return videos;
-    // }
 }
