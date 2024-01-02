@@ -8,12 +8,12 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class DurationValidator implements ConstraintValidator<Duration, String> {
     
-    List<String> scores = Arrays.asList(
-        "Home", "Gym");
+    List<String> duration = Arrays.asList(
+        "Short", "Long");
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        for (String string : scores) {
+        for (String string : duration) {
             if (value.equals(string)) return true;
         }
         return false;

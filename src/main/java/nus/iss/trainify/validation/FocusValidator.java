@@ -8,12 +8,12 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class FocusValidator implements ConstraintValidator<Focus, String> {
     
-    List<String> scores = Arrays.asList(
-        "Home", "Gym");
+    List<String> focus = Arrays.asList(
+        "Shoulder", "Chest", "Abdominal", "Legs", "Full Body");
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        for (String string : scores) {
+        for (String string : focus) {
             if (value.equals(string)) return true;
         }
         return false;

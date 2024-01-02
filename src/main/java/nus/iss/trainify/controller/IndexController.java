@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import nus.iss.trainify.model.User;
+import nus.iss.trainify.model.Video;
 
 import java.util.List;
 
@@ -30,7 +31,8 @@ public class IndexController {
     }
 
     @GetMapping("/generator")
-    public String generator() {
+    public String generator(Model model) {
+        model.addAttribute("video", new Video());
         return "generator";}
 
     @GetMapping("/register")

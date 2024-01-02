@@ -321,14 +321,13 @@ public class WorkoutController {
 
 
     @PostMapping("/generate-workout")
-    public String generateWorkout(
-                            @RequestParam("Location") String location,
-                            @RequestParam("Duration") String duration,
-                            @RequestParam("Focus") String focus,
+    public String generateWorkout(@Valid @ModelAttribute("video") Video video,
+                                  BindingResult result,
+                                  Model model,                            
                             RedirectAttributes redirectAttributes
                             ) {
 
-        List<String> generatedVideos = youtubeService.generateYoutubeVideosId(location, duration, focus);
+        List<String> generatedVideos = youtubeService.generateYoutubeVideosId(video.getLocation(), video.getDuration(), video.getFocus());
         List<String> youtubeUrl = generatedVideos.stream()
                 .map(videoId -> "https://www.youtube.com/embed/" + videoId)
                 .collect(Collectors.toList());

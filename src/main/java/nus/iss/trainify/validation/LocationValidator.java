@@ -8,12 +8,12 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class LocationValidator implements ConstraintValidator<Location, String> {
     
-    List<String> scores = Arrays.asList(
+    List<String> location = Arrays.asList(
         "Home", "Gym");
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        for (String string : scores) {
+        for (String string : location) {
             if (value.equals(string)) return true;
         }
         return false;

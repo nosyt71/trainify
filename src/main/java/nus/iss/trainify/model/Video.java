@@ -37,6 +37,19 @@ public class Video {
         this.focus = focus;
         this.location = location;
     }
+    
+
+    public Video(@NotBlank(message = "Please select a duration.") String duration,
+            @NotBlank(message = "Please select a focus.") String focus,
+            @NotBlank(message = "Please select a location.") String location) {
+        this.duration = duration;
+        this.focus = focus;
+        this.location = location;
+    }
+    
+    
+    public Video() {
+    }
 
     public String getUrl() {
         return url;
