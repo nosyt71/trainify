@@ -2,18 +2,24 @@ package nus.iss.trainify.model;
 
 import java.io.Serializable;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class Workout implements Serializable {
 
     private String username;
     private String description;
     private boolean completed;
 
+    @NotBlank(message = "Push up count is required")
     private int pushUpCount;
 
+    @NotBlank(message = "Sit up count is required")
     private int sitUpCount;
 
+    @NotBlank(message = "Age is required")
     private int age;
 
+    @NotBlank(message = "Run time is required")
     private double runTime;
 
     private double ipptScore;

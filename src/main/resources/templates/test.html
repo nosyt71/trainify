@@ -153,16 +153,20 @@
                     <!-- IPPT form -->
                     <div class="ippt-form">
                         <h3>Log IPPT</h3>
-                        <form method="post" action="/workout/log-ippt" >
+                        <form method="post" th:action="@{/workout/log-ippt}" th:object="${workout}">
                             <input type="hidden" name="username" th:value="${username}" />
                             <label for="age">Age:</label>
-                            <input type="number" class="form-control" id="age" name="age" placeholder="key age" required>
+                            <input type="number" class="form-control" id="age" name="age" th:field="*{pushUpCount}" placeholder="key age" required>
+                            <span th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span>
                             <label for="pushUpCount">Push-Up Count:</label>
                             <input type="number" class="form-control" id="pushUpCount" name="pushUpCount" placeholder="key push up" required>
+                            <span th:if="${#fields.hasErrors('pushUpCount')}" th:errors="*{pushUpCount}"></span>
                             <label for="sitUpCount">Sit-Up Count:</label>
                             <input type="number" class="form-control" id="sitUpCount" name="sitUpCount" placeholder="key sit up" required>
+                            <span th:if="${#fields.hasErrors('sitUpCount')}" th:errors="*{sitUpCount}"></span>
                             <label for="runTime">Run Time (seconds):</label>
                             <input type="number" class="form-control" id="runTime" name="runTime" placeholder="key run time in seconds" required>
+                            <span th:if="${#fields.hasErrors('runTime')}" th:errors="*{runTime}"></span>
                             <button class="btn btn-primary" type="submit">Submit</button>
                         </form>
                     </div>

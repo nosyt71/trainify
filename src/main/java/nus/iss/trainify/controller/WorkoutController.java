@@ -10,9 +10,12 @@ import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.validation.Valid;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -136,20 +139,22 @@ public class WorkoutController {
     }
 
     @PostMapping("/workout/log-ippt")
-    public String logIPPT(@RequestParam("username") String username,
-                          @RequestParam("pushUpCount") int pushUpCount,
-                          @RequestParam("sitUpCount") int sitUpCount,
-                          @RequestParam("runTime") int runTime,
-                          @RequestParam("age") int age) {
+    public String logIPPT(@Valid @ModelAttribute("Workout") Workout workout,
+                          BindingResult bindingResult,
+                          Model model,
+                          @RequestParam("username") String username
+                          ) {
 
-        // Assuming IPPT score calculation logic based on push-up count, sit-up count, and run time
-        int ipptScore = calculateIPPTScore(pushUpCount, sitUpCount, runTime, age);
+        model.addAttribute("workout", new Workout());
+
+        if (bindingResult.hasErrors()) {
+            return "dashboard";
+        }
+
+        int ipptScore = calculateIPPTScore(workout.getPushUpCount(),workout.getSitUpCount(),workout.getRunTime(),workout.getAge());
 
         // Create a new Workout object for the IPPT test
         Workout ipptWorkout = new Workout(username, "IPPT Test", true);
-        ipptWorkout.setPushUpCount(pushUpCount);
-        ipptWorkout.setSitUpCount(sitUpCount);
-        ipptWorkout.setRunTime(runTime);
         ipptWorkout.setIpptScore(ipptScore);
 
         // Save the IPPT workout record
@@ -159,7 +164,7 @@ public class WorkoutController {
     }
 
     // IPPT score calculator
-    private int calculateIPPTScore(int pushUpCount, int sitUpCount, int runTime, int age) {
+    private int calculateIPPTScore(int pushUpCount, int sitUpCount, double runTime, int age) {
         
         int[][] pushAndSitScoringTable = {
                 { 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25 },

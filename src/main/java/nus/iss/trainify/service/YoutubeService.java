@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
-
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
@@ -21,46 +20,46 @@ import jakarta.json.JsonValue;
 public class YoutubeService {
 
     private String search;
+    
     RestTemplate restTemplate = new RestTemplate();
 
     @Value("${youtube.apikey}")
     private String apikey;
 
-    private final String youtubeUrl = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=4";
+    private final String youtubeUrl = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=4&";
 
-        public List<String> generateYoutubeVideosId(@RequestParam String location, @RequestParam String duration, @RequestParam String focus) {
-            search = "&q=workout%20-music%20" + location + "%20" + focus + "&type=video&videoDuration=" + duration + "&videoEmbeddable=true&key=" + apikey;
-            String url_youtubeSearch = youtubeUrl + search;
-            // System.out.println(location);
-            // System.out.println(duration);
-            // System.out.println(focus);
-            // System.out.println(url_youtubeSearch);
-            ResponseEntity<String> response = restTemplate.getForEntity(url_youtubeSearch, String.class);
+    public List<String> generateYoutubeVideosId(@RequestParam String location, @RequestParam String duration, @RequestParam String focus) {
+        search = "q=workout%20" + location + "%20" + focus  + "&key=" + apikey;
+        String url_youtubeSearch = youtubeUrl + search;
+        
+        // System.out.println(url_youtubeSearch);
+        ResponseEntity<String> response = restTemplate.getForEntity(url_youtubeSearch, String.class);
 
-            // System.out.println("----------------");
-            // System.out.println(response);
-            // System.out.println("----------------");
+        System.out.println("----------------");
+        System.out.println(response);
+        System.out.println("----------------");
 
-            String responseBody = response.getBody().toString();
-            JsonReader jReader = Json.createReader(new StringReader(responseBody));
-            JsonObject jsonObject = jReader.readObject();
-            List<String> videoIds = new ArrayList<>();
+        String responseBody = response.getBody().toString();
+        JsonReader jReader = Json.createReader(new StringReader(responseBody));
+        JsonObject jsonObject = jReader.readObject();
+        List<String> videoIds = new ArrayList<>();
 
-            // System.out.println(jsonObject);
+        // System.out.println(jsonObject);
 
-            // Parse the JSON response and extract video IDs
-            JsonArray items = jsonObject.getJsonArray("items");
-            for (JsonValue item : items) {
-                JsonObject videoIdObject = ((JsonObject) item).getJsonObject("id");
-                if (videoIdObject.containsKey("videoId")) {
-                    String videoId = videoIdObject.getJsonString("videoId").getString();
-                    videoIds.add(videoId);
-                }
+        // Parse the JSON response and extract video IDs
+        JsonArray items = jsonObject.getJsonArray("items");
+        for (JsonValue item : items) {
+            JsonObject videoIdObject = ((JsonObject) item).getJsonObject("id");
+            if (videoIdObject.containsKey("videoId")) {
+                String videoId = videoIdObject.getJsonString("videoId").getString();
+                videoIds.add(videoId);
             }
-            // System.out.println(videoIds);
-            return videoIds;
         }
+        // System.out.println(videoIds);
+        return videoIds;
     }
+
+}
 
 
 
