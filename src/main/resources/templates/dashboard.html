@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trainify - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #495057;
+        }
+
+        .navbar {
+            background-color: #343a40;
+        }
+
+        .navbar-brand {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+
+        .card {
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #343a40;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .card-body {
+            text-align: center;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            max-height: 500px;
+            overflow-y: scroll
+        }
+
+        li {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .ippt-form {
+            margin-top: 20px;
+        }
+
+        .container {
+            margin-top: 40px;
+        }
+
+
+        h4 {
+            color: #6c757d;
+        }
+
+        .video-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .custom-table th,
+        .custom-table td {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .custom-table th {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        button {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/}">Trainify.</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" th:href="@{/}">Workout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="text-center">
+        <h2>Welcome, <span th:text="${username}"></span>!</h2>
+        <h4>Your Streak: <span th:text="${streak}"></span></h4>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <ul class="custom-list">
+                <li th:each="workout : ${userWorkouts}">
+                    <span th:text="${workout.description}"></span>
+                    <span th:if="${workout.completed}" class="text-success">(Completed)</span>
+                    <span th:unless="${workout.completed}" class="text-danger">(Not Completed)</span>
+                    <br>
+                    <span>Push-Up Count: <span th:text="${workout.pushUpCount}"></span></span>
+                    <br>
+                    <span>Sit-Up Count: <span th:text="${workout.sitUpCount}"></span></span>
+                    <br>
+                    <span>Run Time: <span th:text="${workout.runTime}"></span></span>
+                    <br>
+                    <span>IPPT Score: <span th:text="${workout.ipptScore}"></span></span>
+                    <hr>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2>IPPT Records</h2>
+                </div>
+                <div class="card-body">
+                    <!-- IPPT form -->
+                    <div class="ippt-form">
+                        <h3>Log IPPT</h3>
+                        <form method="post" action="/workout/log-ippt">
+                            <input type="hidden" name="username" th:value="${username}" />
+                            <label for="age">Age:</label>
+                            <input type="number" class="form-control" id="age" name="age" required>
+                            <label for="pushUpCount">Push-Up Count:</label>
+                            <input type="number" class="form-control" id="pushUpCount" name="pushUpCount" required>
+                            <label for="sitUpCount">Sit-Up Count:</label>
+                            <input type="number" class="form-control" id="sitUpCount" name="sitUpCount" required>
+                            <label for="runTime">Run Time (seconds):</label>
+                            <input type="number" class="form-control" id="runTime" name="runTime" required>
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workout History Table -->
+    <h2 class="mt-5">Workout History</h2>
+    <table class="custom-table">
+        <thead>
+        <tr>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Push-Up Count</th>
+            <th>Sit-Up Count</th>
+            <th>Run Time</th>
+            <th>IPPT Score</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Loop through workout history and populate the table -->
+        <tr th:each="workout : ${userWorkouts}" th:reverse="true">
+            <td th:text="${workout.description}"></td>
+            <td th:if="${workout.completed}" class="text-success">Completed</td>
+            <td th:unless="${workout.completed}" class="text-danger">Not Completed</td>
+            <td th:text="${workout.pushUpCount}"></td>
+            <td th:text="${workout.sitUpCount}"></td>
+            <td th:text="${workout.runTime}"></td>
+            <td th:text="${workout.ipptScore}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <br/>
+    <br/>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Trainify - Workout Generator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+        crossorigin="anonymous">
+    <style>
+      body {
+          background-image: url(https://images.unsplash.com/photo-1649789261044-0c6a9fb528ff?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          height: 100vh;
+          margin: 0;
+          overflow: hidden;
+      }
+      .translucent-card {
+          background-color: rgba(255, 255, 255, 0.7); /* Adjust the alpha (fourth) value for transparency */
+          border-radius: 8px;
+      }
+      </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" th:href="@{/}">Trainify.</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<br /><br /><br /><br><br><br><br><br><br><br><br>
+<div class="container">
+  <div class="row col-md-8 offset-md-2">
+    <div class="card translucent-card">
+      <div class="card-header">
+          <h2 class="text-center">Workout Generator</h2>
+      </div>
+      <div class="card-body">
+          <form action="/generate-workout" 
+            method="post"
+            role="form"
+          >
+            <div class="form-group mb-3">
+              <label class="form-label">Location:</label>
+                <select name="Location" id="Location" >
+                    <option selected disabled>Select Location</option>
+                    <option value="home">Home</option>
+                    <option value="gym">Gym</option>
+                </select>   
+            </div>
+            <!-- <div class="error" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></div> -->
+
+
+            <div class="form-group mb-3">
+                <label class="form-label">Duration:</label>
+                <select name="Duration" id="Duration" >
+                    <option selected disabled>Select Duration</option>  
+                    <option value="medium">Short</option>
+                    <option value="long">Long</option>
+                </select>
+            </div>
+            <!-- <div class="error" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}"></div> -->
+
+
+            <div class="form-group mb-3">
+                <label class="form-label">Focus:</label>
+                <select name="Focus" id="Focus">
+                    <option selected disabled>Select Focus</option>
+                    <option value="shoulder">Shoulder</option>
+                    <option value="chest">Chest</option>
+                    <option value="abs">Abdominal</option>
+                    <option value="legs">Legs</option>
+                </select>
+                <!-- <div class="alert alert-danger" th:if="${#fields.hasErrors('focus')}" th:errors="*{focus}"> -->
+
+            </div> 
+
+            <div class="form-group">
+              <button class="btn btn-primary" type="submit">Generate</button>
+            </div>
+          </form>
+      </div>
+      <!-- Description Box -->
+      <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">Workout Generator Description</h5>
+            <p class="card-text">This is a workout generator that generates YouTube videos to cater to your
+                requirements.</p>
+            <p class="card-text">Select the location for either home or gym workout, the duration for a short
+                workout (4-20 mins) or a long workout (more than 20 minutes), and the focus to target the muscle
+                that you want to focus on.</p>
+        </div>
+    </div>
+    <br>
+  </div>
+</div>
+</body>
+</html>
