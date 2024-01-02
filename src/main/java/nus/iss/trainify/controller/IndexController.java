@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import nus.iss.trainify.model.User;
+
 import java.util.List;
 
 @Controller
@@ -22,9 +24,8 @@ public class IndexController {
     }
 
     @GetMapping("/login")
-    public String loginPage(@ModelAttribute("error") String error, Model model) {
-        // Use 'error' attribute as needed
-        model.addAttribute("error", error);
+    public String loginPage(Model model) {
+        model.addAttribute("user", new User());
         return "login";
     }
 
@@ -33,7 +34,8 @@ public class IndexController {
         return "generator";}
 
     @GetMapping("/register")
-    public String register() {
+    public String register(Model model) {
+        model.addAttribute("user", new User());
         return "register";}
 
     @GetMapping("/complete")

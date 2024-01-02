@@ -2,7 +2,9 @@ package nus.iss.trainify.model;
 
 import java.io.Serializable;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 public class Workout implements Serializable {
 
@@ -10,19 +12,25 @@ public class Workout implements Serializable {
     private String description;
     private boolean completed;
 
-    @NotBlank(message = "Push up count is required")
+    @NotNull(message = "Push up count is required")
+    @Min(value = 0, message = "Push up count must be at least 0")
+    @Max(value = 60, message = "Push up count must be at most 60")
     private int pushUpCount;
 
-    @NotBlank(message = "Sit up count is required")
+    @NotNull(message = "Sit up count is required")
+    @Min(value = 0, message = "Sit up count must be at least 0")
+    @Max(value = 60, message = "Sit up count must be at most 60")
     private int sitUpCount;
 
-    @NotBlank(message = "Age is required")
+    @NotNull(message = "Age is required")
+    @Min(value = 0, message = "Age must be at least 0")
     private int age;
 
-    @NotBlank(message = "Run time is required")
-    private double runTime;
+    @NotNull(message = "Run time is required")
+    @Min(value = 0, message = "Run time must be at least 0")
+    private int runTime;
 
-    private double ipptScore;
+    private int ipptScore;
 
 
     public Workout() {
@@ -58,11 +66,11 @@ public class Workout implements Serializable {
         this.completed = completed;
     }
 
-    public double getIpptScore() {
+    public int getIpptScore() {
         return ipptScore;
     }
 
-    public double getRunTime() {
+    public int getRunTime() {
         return runTime;
     }
 
@@ -74,7 +82,7 @@ public class Workout implements Serializable {
         return sitUpCount;
     }
 
-    public void setIpptScore(double ipptScore) {
+    public void setIpptScore(int ipptScore) {
         this.ipptScore = ipptScore;
     }
 
@@ -82,7 +90,7 @@ public class Workout implements Serializable {
         this.pushUpCount = pushUpCount;
     }
 
-    public void setRunTime(double runTime) {
+    public void setRunTime(int runTime) {
         this.runTime = runTime;
     }
 

@@ -1,12 +1,16 @@
 package nus.iss.trainify.model;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class User {
 
-    @NotBlank(message = "Username is required")
+    @NotNull(message = "Username is required")
+    @Size(min=3, max=30, message = "Name must be between 3 to 30 characters")
     private String username;
-    @NotBlank(message = "Password is required")
+
+    @NotNull(message = "Password is required")
+    @Size(min=3, max=30, message = "Password must be between 3 to 30 characters")
     private String password;
 
     public User() {

@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping
 public class WorkoutController {
+
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Qualifier("redis") // Specify the qualifier for the desired RedisTemplate bean
     @Autowired
@@ -92,7 +93,9 @@ public class WorkoutController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboardPage(@RequestParam("username") String username, Model model) {
+    public String dashboardPage(@Valid @ModelAttribute("workout") Workout workout, @RequestParam("username") String username, Model model) {
+
+        model.addAttribute("workout", new Workout());
         String key = REDIS_KEY_PREFIX + username;
 
         ListOperations<String, String> listOperations = redisTemplate.opsForList();
@@ -109,11 +112,6 @@ public class WorkoutController {
             List<Workout> reversedUserWorkouts = new ArrayList<>(userWorkouts);
             Collections.reverse(reversedUserWorkouts);   
 
-            // Print all userWorkouts
-            for (Workout workout : userWorkouts) {
-                System.out.println(workout);
-            }
-            System.out.println(workoutStrings.toString());
             // Calculate streaks based on userWorkouts
             int streak = calculateStreak(userWorkouts);
 
@@ -140,15 +138,13 @@ public class WorkoutController {
     }
 
     @PostMapping("/workout/log-ippt")
-    public String logIPPT(@Valid @ModelAttribute("Workout") Workout workout,
-                          BindingResult bindingResult,
+    public String logIPPT(@Valid @ModelAttribute("workout") Workout workout,
+                          BindingResult result,
                           Model model,
                           @RequestParam("username") String username
                           ) {
 
-        model.addAttribute("workout", new Workout());
-
-        if (bindingResult.hasErrors()) {
+        if (result.hasErrors()) {
             return "dashboard";
         }
 
@@ -157,6 +153,9 @@ public class WorkoutController {
         // Create a new Workout object for the IPPT test
         Workout ipptWorkout = new Workout(username, "IPPT Test", true);
         ipptWorkout.setIpptScore(ipptScore);
+        ipptWorkout.setPushUpCount(workout.getPushUpCount());
+        ipptWorkout.setSitUpCount(workout.getSitUpCount());
+        ipptWorkout.setRunTime(workout.getRunTime());
 
         // Save the IPPT workout record
         addWorkout(username, ipptWorkout);
@@ -333,9 +332,7 @@ public class WorkoutController {
         List<String> youtubeUrl = generatedVideos.stream()
                 .map(videoId -> "https://www.youtube.com/embed/" + videoId)
                 .collect(Collectors.toList());
-        // System.out.println(location);
-        // System.out.println(duration);
-        // System.out.println(focus);
+
         youtubeUrl.forEach(videoUrl -> System.out.println("Video URL: " + videoUrl));
         // Add videoUrls to the redirectAttributes
         redirectAttributes.addFlashAttribute("videoUrls", youtubeUrl);

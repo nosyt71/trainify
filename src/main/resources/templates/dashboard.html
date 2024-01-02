@@ -152,16 +152,33 @@
                     <!-- IPPT form -->
                     <div class="ippt-form">
                         <h3>Log IPPT</h3>
-                        <form method="post" action="/workout/log-ippt" >
+                        <form method="post" th:action="@{/workout/log-ippt}" th:object="${workout}">
                             <input type="hidden" name="username" th:value="${username}" />
-                            <label for="age">Age:</label>
-                            <input type="number" class="form-control" id="age" name="age" placeholder="Enter Age" style="text-align: center;" required>
-                            <label for="pushUpCount">Push-Up Count:</label>
-                            <input type="number" class="form-control" id="pushUpCount" name="pushUpCount" placeholder="Enter Push Up" style="text-align: center;" required>
-                            <label for="sitUpCount">Sit-Up Count:</label>
-                            <input type="number" class="form-control" id="sitUpCount" name="sitUpCount" placeholder="Enter Sit Up" style="text-align: center;" required>
-                            <label for="runTime">Run Time (seconds):</label>
-                            <input type="number" class="form-control" id="runTime" name="runTime" placeholder="Enter Run Time" style="text-align: center;" required>
+
+                            <div>
+                                <label for="age">Age:</label>
+                                <input type="number" th:field="*{age}" class="form-control" name="age" placeholder="Enter Age" style="text-align: center;" required>
+                                <div class="error" th:if="${#fields.hasErrors('age')}" th:errors="*{#fields.age}"></div>
+                            </div>
+
+                            <div>
+                                <label for="pushUpCount">Push-Up Count(0-60):</label>
+                                <input type="number" th:field="*{pushUpCount}" class="form-control" name="pushUpCount" placeholder="Enter Push Up" style="text-align: center;" required>
+                                <div class="error" th:if="${#fields.hasErrors('pushUpCount')}" th:errors="*{#fields.pushUpCount}"></div>
+                            </div>  
+
+                            <div>
+                                <label for="sitUpCount">Sit-Up Count(0-60):</label>
+                                <input type="number" th:field="*{sitUpCount}" class="form-control" name="sitUpCount" placeholder="Enter Sit Up" style="text-align: center;" required>
+                                <div class="error" th:if="${#fields.hasErrors('sitUpCount')}" th:errors="*{#fields.sitUpCount}"></div>
+                            </div>
+
+                            <div>
+                                <label for="runTime">Run Time (seconds):</label>
+                                <input type="number" th:field="*{runTime}" class="form-control" name="runTime" placeholder="Enter Run Time" style="text-align: center;" required>
+                                <div class="error" th:if="${#fields.hasErrors('runTime')}" th:errors="*{#fields.runTime}"></div>
+                            </div>
+
                             <button class="btn btn-primary" type="submit">Submit</button>
                         </form>
                     </div>

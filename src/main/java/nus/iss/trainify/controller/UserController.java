@@ -3,12 +3,17 @@ package nus.iss.trainify.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import nus.iss.trainify.model.User;
 
 @Controller
-@RequestMapping
+@RequestMapping(path="/user")
 public class UserController {
 
     @Qualifier("redis") // Specify the qualifier for the desired RedisTemplate bean
@@ -18,43 +23,59 @@ public class UserController {
     private static final String REDIS_KEY_PREFIX = "user:";
 
 
-    @PostMapping("/user/register")
-    public String registerUser(@RequestParam("newUsername") String newUsername,
-                               @RequestParam("newPassword") String newPassword) {
+    @PostMapping("/register")
+    public String registerUser(@Valid @ModelAttribute("user") User user,
+                                BindingResult result,
+                                Model model,
+                                HttpSession session) {
 
+        if (result.hasErrors()) {
+            return "register";
+        }
+                        
+        String username = user.getUsername();
+        String password = user.getPassword();
 
         // Check if the user already exists
-        if (redisTemplate.hasKey(REDIS_KEY_PREFIX + newUsername)) {
-            return "User already exists";
+        if (redisTemplate.hasKey(REDIS_KEY_PREFIX + username)) {
+            result.rejectValue("username", "error.user", "User already exists");
+            return "register";
         }
 
         // Store user information in Redis
-        redisTemplate.opsForHash().put(REDIS_KEY_PREFIX + newUsername, "username", newPassword);
-        redisTemplate.opsForHash().put(REDIS_KEY_PREFIX + newUsername, "password", newPassword);
+        redisTemplate.opsForHash().put(REDIS_KEY_PREFIX + username, "username", password);
+        redisTemplate.opsForHash().put(REDIS_KEY_PREFIX + username, "password", password);
 
         return "redirect:/login";
     }
 
-    @PostMapping("/user/login")
-    public String loginUser(@RequestParam("username") String username,
-                            @RequestParam("password") String password,
-                            RedirectAttributes attributes) {
+    @PostMapping("/login")
+    public String loginUser(@Valid @ModelAttribute("user") User user,
+                            BindingResult result,
+                            Model model,
+                            HttpSession session
+                            ) {
 
-        // Check if the user exists
-        if (!redisTemplate.hasKey(REDIS_KEY_PREFIX + username)) {
-            attributes.addFlashAttribute("error", "User does not exist");
-            return "redirect:/login";
+        String username = user.getUsername();
+        String password = user.getPassword();
+
+        if(result.hasErrors()){
+            return "login";
         }
 
         // Retrieve stored password from Redis
         String storedPassword = (String) redisTemplate.opsForHash().get(REDIS_KEY_PREFIX + username, "password");
+        String storedUsername = (String) redisTemplate.opsForHash().get(REDIS_KEY_PREFIX + username, "username");
 
-        // Check if the provided password matches the stored password
-        if (password.equals(storedPassword)) {
+
+        // Check if the username and password matches
+        if (username.equals(storedUsername) && password.equals(storedPassword)) {
             return "redirect:/dashboard?username=" + username;
         } else {
-            attributes.addFlashAttribute("error", "Invalid username or password");
-            return "redirect:/login";
+            result.rejectValue("username", "error.user", "Invalid username or password");
+            result.rejectValue("password", "error.password", "Invalid username or password");
+            return "login";
         }
+
     }
 }
