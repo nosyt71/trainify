@@ -29,7 +29,7 @@ public class YoutubeService {
     private final String youtubeUrl = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=4&";
 
     public List<String> generateYoutubeVideosId(@RequestParam String location, @RequestParam String duration, @RequestParam String focus) {
-        search = "q=workout%20" + location + "%20" + focus  + "&key=" + apikey;
+        search = "q=workout%20" + duration + "%20" + location + "%20" + focus  + "&key=" + apikey;
         String url_youtubeSearch = youtubeUrl + search;
         
         // System.out.println(url_youtubeSearch);
